@@ -38,7 +38,8 @@ avg a b = (a + b)/2
 7.0
 
   а) Вычислите в ghci среднее арифметическое следующих пар чисел: 332 и 723, 34.34 и 93.27.
-     Впишите ответы:
+     Впишите ответы: 1) 527.5; 
+		     2) 63.805;
 
   б) Напишите функцию avg3, вычисляющую среднее арифметическое трёх заданных чисел.
      Проверьте результаты её работы на двух тройках чисел.
@@ -46,7 +47,7 @@ avg a b = (a + b)/2
 -}
 
 avg3 :: Double -> Double -> Double -> Double
-avg3 a b c = undefined
+avg3 a b c = (a+b+c)/3
 
 {-
    После определения функции avg3 этот файл следует перезагрузить. Для этого в ghci необходимо выполнить
@@ -54,7 +55,9 @@ avg3 a b c = undefined
 
    Результаты проверки:
 
-   ???
+   *Main> avg3 10 11 12
+   11.0
+
 
 -}
 
@@ -78,6 +81,48 @@ avg3 a b c = undefined
     error "AAAA!!!!"
     12345^54321
     2 < 3 || 9999954321^99912345 > 12345^54321
+________________________________________________________________
+РЕЗУЛЬАТЫ:
+*Main>  2 + 3
+5
+
+*Main> mod 10 4
+2
+
+*Main> 10 `mod` 4
+2
+
+*Main> True && 5 < 10
+True
+
+*Main> 5 < 7 || 10 > 3
+True
+
+*Main> sqrt (-2)
+NaN
+
+*Main> sqrt (sqrt 16)
+2.0
+
+*Main> let x = 4 in (sin x)^2 + (cos x)^2
+1.0
+
+*Main> x
+
+<interactive>:24:1: Not in scope: `x'
+
+*Main> 7^(-1)
+*** Exception: Negative exponent
+
+*Main> error "AAAA!!!!"
+*** Exception: AAAA!!!!
+
+*Main> 12345^54321
+very big value
+
+*Main> 2 < 3 || 9999954321^99912345 > 12345^54321
+True
+
 
 -}
 
@@ -96,13 +141,36 @@ avg3 a b c = undefined
 
   Определите и сохраните в этом файле типы следующих выражений:
    5
+*Main> :t 5
+5 :: Num a => a
+
    5.0
+*Main> :t 5.0
+5.0 :: Fractional a => a
+
    sqrt 4
+*Main> :t sqrt 4
+sqrt 4 :: Floating a => a
+
    sqrt 4.0
+*Main> :t sqrt 4.0
+sqrt 4.0 :: Floating a => a
+
    2+3
+*Main> :t 2+3
+2+3 :: Num a => a
+
    5 < 7
+*Main> :t 5 < 7
+5 < 7 :: Bool
+
    if 2 > 3 then 7 else 5
+*Main> :t if 2 > 3 then 7 else 5
+if 2 > 3 then 7 else 5 :: Num a => a
+
    5 > 6 && False
+*Main> :t 5 > 6 && False
+5 > 6 && False :: Bool
 
    Команда ":set +t" включает режим, при котором печатается тип каждого вычисляемого выражения.
    Команда ":set +s" включает режим, при котором печатается время вычисления каждого выражения.
@@ -115,25 +183,35 @@ avg3 a b c = undefined
 -- (типовая аннотация здесь означает, что функция принимает один параметр типа a и возвращает значение
 --  типа a, причём тип a принадлежит классу типов Num)
 double :: Num a => a -> a
-double a = undefined
+double a = 2*a
 
 -- б) Утроение заданного числа
 --    (типовую аннотацию и образцы параметров следует написать самостоятельно)
-triple = undefined
+triple :: Num a=>a->a
+triple a=a*3 
 
 -- в) Определение наибольшего из трёх заданных целых чисел (можно воспользоваться стандартной
 --    двухаргументной функцией max).
 max3 :: Ord a => a -> a -> a -> a
-max3 = undefined
+max3 a b c=max (max a b) c
 
 {-
   Проверка:
 > max3 87 34 209
-???
+209
+it :: Integer
+(0.01 secs, 903268 bytes)
+
 > max3 22 28 30
-???
+30
+it :: Integer
+(0.00 secs, 911244 bytes)
+
 > max3 12 25 (-7)
-???
+25
+it :: Integer
+(0.00 secs, 920156 bytes)
+
 
 -}
 
@@ -141,19 +219,21 @@ max3 = undefined
 -- (пользоваться стандартными логическими операциями не следует, обратите внимание на
 --  образцы параметров функции, последняя строка -- "во всех остальных случаях").
 bothTrue :: Bool -> Bool -> Bool
-bothTrue True True = undefined
-bothTrue _  _ = undefined
+bothTrue True True = True
+bothTrue _  _ = False
 
 
 -- д) Функция, возвращающая True, если только один из её аргументов равен True,
 -- и False в противном случае (пользоваться стандартными логическими операциями не следует).
 oneTrue :: Bool -> Bool -> Bool
-oneTrue = undefined
+oneTrue _ True = True
+oneTrue True _ = True
+oneTrue _ _ = False
 
 -- е) Дана температура в градусах Фаренгейта. Вычислить соответствующую температуру
 -- в градусах Цельсия.
 f2c :: Double -> Double
-f2c = undefined
+f2c a=(a-32)*5/9 
 
 {-
    ж) Найти наибольший общий делитель двух целых чисел, пользуясь
@@ -161,14 +241,22 @@ f2c = undefined
       НОД(a, 0) = a.
       НОД(a, b) = НОД(b, a mod b), если b ≠ 0; 
 -}
--- gcd' :: ???
-gcd' = undefined
+gcd' :: Int->Int->Int
+gcd' a 0= a
+gcd' a b= gcd' b (a `mod` b)  
 
 -- з) Функция, возвращающая название дня недели по его номеру (от 1 до 7),
 --    если номер неправильный, генерируется исключение (функция error).
 --    В реализации следует пользоваться сопоставлением с образцами.
 dayOfWeek :: Int -> String
-dayOfWeek = undefined
+dayOfWeek 1= "Monday"
+dayOfWeek 2= "Thuesay"
+dayOfWeek 3= "Wensday"
+dayOfWeek 4= "Thiraday"
+dayOfWeek 5= "Friday"
+dayOfWeek 6= "Sattuday"
+dayOfWeek 7= "Sunday"
+dayOfWeek _= "not exsist such day of week"
 
 
 -- Далее типовые аннотации, если их нет, следует писать самостоятельно.
