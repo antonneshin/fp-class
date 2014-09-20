@@ -58,6 +58,9 @@ avg3 a b c = (a+b+c)/3
    *Main> avg3 10 11 12
    11.0
 
+   *Main> avg3 15 72 65
+   50.666666666666664
+
 
 -}
 
@@ -250,11 +253,11 @@ gcd' a b= gcd' b (a `mod` b)
 --    В реализации следует пользоваться сопоставлением с образцами.
 dayOfWeek :: Int -> String
 dayOfWeek 1= "Monday"
-dayOfWeek 2= "Thuesay"
-dayOfWeek 3= "Wensday"
-dayOfWeek 4= "Thiraday"
+dayOfWeek 2= "Tuesday"
+dayOfWeek 3= "Wednesday"
+dayOfWeek 4= "Thursday"
 dayOfWeek 5= "Friday"
-dayOfWeek 6= "Sattuday"
+dayOfWeek 6= "Saturday"
 dayOfWeek 7= "Sunday"
 dayOfWeek _= "not exsist such day of week"
 
@@ -269,7 +272,7 @@ sign :: (Num a, Ord a) => a -> Int
 sign a
    | a < 0 = -1
    | a == 0 = 0
-   | otherwise = 1
+   | otherwise =  1
 
 {-
    а) Найти значение функции f(x), вычисляемое по правилу:
@@ -278,12 +281,20 @@ sign a
           4,    если x ≥ 2.
 -}
 
-eval_f = undefined
+eval_f :: (Num a, Ord a) => a -> a
+eval_f a
+   | a <= 0 = -a
+   | (a > 0) && (a < 2) = (a^2)
+   | otherwise =  4
 
 -- б) Написать функцию, возвращающую текстовую характеристику ("hot", "warm", "cool", "cold")
 -- по заданному значению температуры в градусах Цельсия.
 describeTemperature :: Double -> String
-describeTemperature = undefined
+describeTemperature a
+	| a >=30 = "hot"
+	| (a>=10) && (a<30) = "warm"
+	| (a>=0) && (a<10) = "cool"
+	| otherwise = "cold"
 
 {- 
    в) (*) Дан список температур в градусах Фаренгейта. Вывести для каждого значения
@@ -291,6 +302,7 @@ describeTemperature = undefined
 
   Решение:
 > map (describeTemperature . f2c) [82, 94, 50, 65, 34]
+map (describeTemperature . f2c) [82, 94, 50, 65, 34]
 
   В этом решении с помощью операции (.) строится композиция (суперпозиция) функций
   и получившаяся функция применяется функцией map к каждому элементу списка.
