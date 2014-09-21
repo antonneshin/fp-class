@@ -2,17 +2,18 @@
 -- Написать функцию, которая разбивает промежуток времени в секундах на часы, минуты и секунды.
 -- Результат возвращать в виде кортежа из трёх элементов. Реализовать также обратное преобразование.
 sec2hms :: Int -> (Int, Int, Int)
-sec2hms = undefined
+sec2hms s = (s `div` 3600, (s `mod` 3600) `div` 60, (s `mod` 3600) `mod` 60) 
 
 hms2sec :: (Int, Int, Int) -> Int
-hms2sec (h, m, s) = undefined
+hms2sec (h, m, s) = h*3600+m*60+s
 
 -- Реализовать с помощью hms2sec (здесь параметры заданы по отдельности)
 hms2sec' :: Int -> Int -> Int -> Int
-hms2sec' = undefined
+hms2sec' h m s = h*3600+m*60+s
 
 -- должно быть True
 test1 = and $ map (\x -> x == hms2sec (sec2hms x)) [1,10..10000]
+--получилось True!!
 
 -- 1.2
 -- Написать функции, вычисляющие
@@ -22,13 +23,14 @@ test1 = and $ map (\x -> x == hms2sec (sec2hms x)) [1,10..10000]
 type Point = (Double, Double)
 
 distance :: Point -> Point -> Double
-distance (x1, y1) (x2, y2) = undefined
+distance (x1, y1) (x2, y2) = sqrt ((x2-x1)^2 + (y2-y1)^2)
 
--- triangle :: ??? -> (Double, Double)
-triangle _ = (p, s)
+triangle :: Point -> Point -> Point -> (Double, Double)
+triangle (x1, y1) (x2, y2) (x3, y3) = (a+b+c, 1/2*a*b)
   where
-    p = undefined
-    s = undefined
+	a=distance (x1, y1) (x2, y2)
+	b=distance (x2, y2) (x3, y3)
+	c=distance (x1, y1) (x3, y3)
 
 -- Во всех следующих заданиях использование стандартных функций обработки списков не допускается.
 -- Все решения должны реализовываться рекурсивными функциями.
@@ -37,7 +39,9 @@ triangle _ = (p, s)
 -- Определить рекурсивную функцию, определяющую количество чётных элементов списка
 nEven :: Integral a => [a] -> Int
 nEven [] = 0
-nEven (x:xs) = undefined
+nEven (x:xs) = if ((x `mod` 2) == 0) then ((nEven xs) +1) else (nEven xs)
+
+	
 
 -- 2.2
 -- Увеличить все элементы заданного списка в два раза.
@@ -45,18 +49,26 @@ nEven (x:xs) = undefined
 -- > 1 : [2,3,4]
 --   [1,2,3,4]
 doubleElems :: Num a => [a] -> [a]
-doubleElems = undefined
+doubleElems xs = [2*x| x <- xs]
 
 -- 2.3
 -- Дан список целых чисел. Сформировать новый список, содержащий только нечетные элементы исходного.
 fltOdd :: Integral a => [a] -> [a]
 fltOdd [] = []
-fltOdd (x:xs) = undefined
+fltOdd xs = [ x | x <- xs, (x `mod` 2 ) /= 0]
 
 -- 2.4
 -- Написать следующие функции обработки списков:
 -- а) удалить все отрицательные элементы;
+del_otr :: Integral a => [a] -> [a]
+del_otr [] = []
+del_otr xs = [ x | x <- xs, x >= 0]
+
 -- б) увеличить элементы с чётными значениями в два раза;
+d_ch :: Integral a => [a] -> [a]
+d_ch [] = []
+d_ch xs = [ if ((x `mod` 2 ) == 0) then 2*x else x | x <- xs ]
+
 -- в) переставить местами чётные и нечётные по порядку следования элементы
 --    (для списков нечётной длины отбрасывать последний элемент).
 
