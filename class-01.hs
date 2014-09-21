@@ -302,7 +302,7 @@ describeTemperature a
 
   Решение:
 > map (describeTemperature . f2c) [82, 94, 50, 65, 34]
-map (describeTemperature . f2c) [82, 94, 50, 65, 34]
+["warm","hot","warm","warm","cool"]
 
   В этом решении с помощью операции (.) строится композиция (суперпозиция) функций
   и получившаяся функция применяется функцией map к каждому элементу списка.
@@ -317,32 +317,68 @@ sum_n n
   | otherwise = error "n should be >= 1"
 
 -- а) Вычислить сумму всех целых чисел от a до b включительно.
-sum_ab = undefined
+--sum_ab:: Num -> Num -> Num
+--sum_ab a 0 = a
+
+sum_ab:: (Num a, Ord a) => a -> a -> a
+sum_ab a b 
+	| a==b = b
+	| a<b = (a + (sum_ab (a+1) b))
+	| otherwise = (b + (sum_ab (b+1) a))
 
 {-
    б) Числовая последовательность определяется следующим образом:
       a1 = 1, a2 = 2, a3 = 3, a_k = a_{k−1} + a_{k−2} − 2*a_{k−3}, k = 4, 5, ...
       Вычислить её n-й элемент.
 -}
-eval_a_n = undefined
-
+eval_a_n:: (Num n, Ord n) => n -> n
+eval_a_n n
+	| n==1 = 1
+	| n==2 = 2
+	| n==3 = 3
+	| otherwise = eval_a_n (n-1) + eval_a_n (n-2) - 2*eval_a_n (n-3)
+ 
 -- в) Вычислить, пользуясь рекурсией, n-ю степень числа a (n - целое):
-pow = undefined
+pow:: Double -> Int -> Double
+pow a n
+	| n==0 = 1
+	| n==1 = a
+	| n>1 = a*(pow a (n-1))
+	| n==(-1) = 1/a
+	| n<(-1) = 1/a*(pow a (n+1))
 
 -- г) Пользуясь ранее написанной функцией pow, вычислить сумму: 1^k + 2^k + ... + n^k.
-sum_nk = undefined
+sum_nk:: Double -> Int -> Double
+sum_nk n k
+	| n==0 = 0
+	|otherwise = (pow n k) + (sum_nk (n-1) k)
 
 -- д) Сумма факториалов чисел от 1 до n.
+sum_fact:: Int -> Int
 sum_fact 1 = 1
-sum_fact n = undefined
+sum_fact n = (fact n) + sum_fact (n-1)
   where
-    fact n = undefined
+	fact 0 = 1
+	fact n = n*fact(n-1)
+  
 
 -- е) Количество цифр целого числа
-number_digits = undefined
+number_digits:: Int -> Int
+number_digits a
+	| (a `mod` 10) == 0 = 0
+	| otherwise = number_digits (a `div` 10) + 1
 
 -- ж) Проверить, является ли заданное число простым.
-isPrime = undefined
+isPrime:: Int -> Bool
+isPrime':: Int -> Int -> Bool
+isPrime p
+	| p<=0 = error "wrong number"
+	| otherwise = isPrime' p 2
+isPrime' p d
+	| d*d>p = True
+	| p `mod` d == 0 = False
+	| otherwise = isPrime' p (d+1)
+	
 
 -- 8) Разное
 
@@ -354,6 +390,14 @@ isPrime = undefined
   а 1200 и 2000 — являются).
 -}
 
-nDays year = undefined
+nDays:: Int -> Int
+nDays year 
+	| ((isLeap year) == True) = 366
+	| otherwise = 365
   where
-    isLeap = undefined
+	isLeap:: Int -> Bool
+	isLeap n
+		| ((n `mod` 4)==0) && ((n `mod` 100)==0) && ((n `mod` 400) /= 0) = False
+		| ((n `mod` 4)==0) = True
+		| otherwise = False
+			
