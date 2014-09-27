@@ -1,4 +1,5 @@
-{-000
+import Data.Char
+{-
 Явная рекурсия в решениях хотя и допускается, но не приветствуется. Старайтесь обходиться стандартными
 функциями, используя при этом создание функций «на лету». Пытайтесь максимально упростить уже написанные
 решения, применяя подходящие функции из модуля Data.List и любых других модулей. Перед выполнением заданий
@@ -49,7 +50,7 @@ in_quater k
 	| k==4 = filter (\(a, b) -> (a>=0) && (b<=0))
 
 dtop :: [(Double, Double)] -> [(Double, Double)]
-dtop = map (\(x, y) -> ( sqrt(x^2 + y^2), atan(y/x) ) )
+dtop = map (\(x, y) -> ( sqrt(x^2 + y^2), if (x>=0) then atan(y/x) else pi + atan(y/x) ) )
 
 prov = map (\x -> if x `mod` 2 == 0 then 2*x else x) 
 
@@ -61,7 +62,15 @@ prov = map (\x -> if x `mod` 2 == 0 then 2*x else x)
 -}
 
 f13a :: [String] -> [String]
-f13a = map undefined
+f13a = map $ map toUpper
+--f13a' = map toUpper
+
+f13b :: Int -> [[a]] -> [[a]]
+f13b k = filter (\x -> k == length x)
+
+f13c :: Eq a => a -> [[a]] -> [[a]]
+f13c a = filter (\x -> a == head x)
+
 
 {-
 2. Формирование числовых последовательностей (iterate).
