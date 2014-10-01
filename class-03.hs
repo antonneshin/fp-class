@@ -1,4 +1,5 @@
 import Data.Char
+import Data.List
 {-
 Явная рекурсия в решениях хотя и допускается, но не приветствуется. Старайтесь обходиться стандартными
 функциями, используя при этом создание функций «на лету». Пытайтесь максимально упростить уже написанные
@@ -81,8 +82,35 @@ f13c a = filter (\x -> a == head x)
  e) Список строк, представляющих n-значные двоичные числа.
 -}
 
+-- a) Список натуральных чисел, начиная с 0.
 nats :: [Integer]
-nats = iterate undefined 0
+nats = iterate (+1) 0
+
+-- b) Список чётных чисел.
+nats_ch :: [Integer]
+nats_ch = iterate (+2) 0
+
+-- c) Список элементов последовательности: a0=1, an=(1+an-1)/2.
+posled:: [Float]
+posled = iterate (\x -> (1 + x)/2 ) 1
+
+-- d) Список символов английского алфавита.
+eng_letters :: [Char]
+eng_letters = take 26 $ iterate (\x -> chr (ord (x) + 1) ) 'a'
+
+--e) Список строк, представляющих n-значные двоичные числа.
+itob :: Int -> [Char]
+itob 0 = "0"
+itob 1 = "1"
+itob n = itob(n `div` 2) ++ [intToDigit(n `mod` 2)] 
+
+btoi :: [Char] -> Int
+btoi "0" = 0
+btoi "1" = 1
+btoi (x:xs) = digitToInt(x) * 2^length(xs) + btoi xs 
+
+binar :: [[Char]]
+binar = take 10 $ iterate (\x -> itob $ ((btoi x) + 1) ) "0"
 
 {-
 3. Группировка списков.
@@ -96,11 +124,24 @@ nats = iterate undefined 0
   e) Дан список. Определить длину самого длинного подсписка, содержащего подряд идущие одинаковые элементы.
 -}
 
-f3d :: [a] -> Int -> Int -> [[a]]
-f3d xs n m = undefined
+f3a :: [Char] -> [Char]
+f3a xs = (filter (\x -> x `elem` ['0','1','2','3','4', '5', '6', '7', '8', '9'] ) xs) ++ (filter (\x -> not (x `elem` ['0','1','2','3','4', '5', '6', '7', '8', '9']) ) xs)
 
+f3b :: (Num a, Num a1, Ord a, Ord a1) => [(a, a1)] -> [(a, a1)]
+f3b xs = (filter (\(x, y) -> (x>=0) && (y>=0) ) xs) ++ (filter (\(x, y) -> (x<=0) && (y>=0) ) xs) ++ (filter (\(x, y) -> (x<=0) && (y<=0) ) xs) ++ (filter (\(x, y) -> (x>=0) && (y<=0) ) xs)
+
+f3c :: [a] -> Int -> [[a]]
+f3c [] _ = []
+f3c xs n = [take n xs] ++ f3c (drop n xs) n
+
+f3d :: [a] -> Int -> Int -> [[a]]
+f3d [] _ _ = []
+f3d xs n m = [take n xs] ++ f3d (drop m xs) n m
 -- Должно быть True
 test_f3d = f3d [1..10] 4 2 == [[1,2,3,4],[3,4,5,6],[5,6,7,8],[7,8,9,10],[9,10]]
+
+lenlist :: Eq a => [a] -> Int
+lenlist xs = head $ reverse $ sort $ [length x | x <- group xs]
 
 {-
 4. Разные задачи.
@@ -114,3 +155,32 @@ test_f3d = f3d [1..10] 4 2 == [[1,2,3,4],[3,4,5,6],[5,6,7,8],[7,8,9,10],[9,10]]
     называется элемент, больший своих соседей.
  e) Дан список. Продублировать все его элементы.
 -}
+
+f4a :: [Char] -> Int
+f4a xs = length $ group $ filter (\x -> x `elem` ['0','1','2','3','4', '5', '6', '7', '8', '9'] ) xs
+
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+
+f4b :: Integer
+f4b = sum $ filter (\x -> (x `mod` 7 == 0) || (x `mod` 77 == 0) ) (take 128 fibs)
+
+f4c :: Ord t => [t] -> Int -> [[t]]
+f4c xs n = map (\x -> [snd x] ) $ take n $ reverse $ sort $ [(length x, head x) | x <- group $ sort xs]
+
+lmax (x:[]) = []
+--lmax xs = [ max x y | x, y <- xs]
+
+
+f4d' [] = []
+f4d' (x:[]) = [x]
+f4d' (x:y:[]) = [max x y]
+f4d' (x:y:z:xs) = (max z $ (max x y)) : if xs == [] then f4d' (y:z:xs) else f4d' (z:xs)
+
+f4d (x:xs) = zipWith (max) xs (take ((length xs)) (x:xs)) 
+
+f4e [] = []
+f4e (x:xs) = [x] ++ [x] ++ f4e xs 
+
+
+
+
