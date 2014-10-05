@@ -1,4 +1,4 @@
-{-777
+{-
   Все задачи в этом задании должны решаться исключительно с помощью свёрток.
   Явная рекурсия не допускается. Если в решении в качестве вспомогательной
   требуется стандартная функция обработки списков (помимо fold*, scan*), она
@@ -23,6 +23,49 @@
   e) Найти наименьший нечётный элемент списка с целочисленными значениями (дополнительным параметром
      функции должно быть значение, возвращаемое по умолчанию).
 -}
+
+f1a :: Integral a => [a] -> a
+f1a [] = 0
+f1a xs = foldl (\x y -> x + if (y `mod` 2) == 0 then y else 0) 0 xs
+
+f1a_test1 = f1a [] == 0
+f1a_test2 = f1a [2] == 2
+f1a_test3 = f1a [1..10] == 30
+
+
+f1b :: [Integer] -> (Integer, Integer)
+f1b [] = (0, 0)
+f1b xs = foldl (\(x,y) z -> (x+z, y*z)) (0,1) xs
+
+f1b_test1 = f1b [] == (0, 0)
+f1b_test2 = f1b [1,2] == (3, 2)
+f1b_test3 = f1b [1..10] == (55,3628800)
+
+
+f1c :: Fractional b => [b] -> b
+f1c [] = 0
+f1c xs = (foldl (+) 0 xs)/(foldl (\x y -> x + 1  ) 0 xs)
+
+f1c_test1 = f1c [] == 0
+f1c_test2 = f1c [2] == 2.0
+f1c_test3 = f1c [1,2,3] == 2.0
+
+
+f1d :: Ord a => [a] -> a
+f1d xs = foldl (\ x y -> if (x>y) then x else y) (head xs) xs
+
+f1d_test1 = f1d [4] == 4
+f1d_test2 = f1d [4, 5] == 5
+f1d_test3 = f1d [6, 4, 5] == 6
+
+
+f1e :: Integral a => [a] -> a
+f1e xs = foldl (\ x y -> if (x<y) then x else y) (head $ filter (\x -> (x `mod` 2) /= 0) xs) $ filter (\x -> (x `mod` 2) /= 0) xs
+
+f1e_test1 = f1e [1] == 1
+f1e_test2 = f1e [2, 1] == 1
+f1e_test3 = f1e [1,2,3,-1,5,6] == -1
+
 
 {-
  2. Свёртки, формирующие списки
