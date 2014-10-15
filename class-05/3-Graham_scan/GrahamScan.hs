@@ -4,7 +4,7 @@ module GrahamScan where
 
 -- 1. Определить тип Point для хранения информации о точке на вещественной плоскости.
 
-data Point
+data Point = Point (Double, Double) deriving(Show, Ord, Eq)
   
 {-
   2. Если заданы три точки a, b, c, можно рассматривать направление поворота от отрезка прямой,
@@ -13,7 +13,27 @@ data Point
   этих трёх возможностей определить специальный тип Direction.
 -}
 
-data Direction
+data Direction = GoLeft | GoRight | OneLine deriving (Show)
+
+
+ugol :: (Floating a, Ord a) => a -> a -> a
+ugol x y 
+  | (x>0)&&(y>=0) = atan(y/x)
+  | (x>0)&&(y<0) = atan(y/x) + 2*pi
+  | (x<0) = atan(y/x) + pi
+  | (x==0)&&(y>0) = pi/2
+  | (x==0)&&(y<0) = -pi/2
+  | (x==0)&&(y==0) = 0
+
+
+direct :: Point -> Point -> Point -> Direction
+direct (Point (ax, ay)) (Point (bx,by)) (Point (cx,cy))
+  | vb > vc = GoRight
+  | vb < vc = GoLeft
+  | otherwise = OneLine
+  where
+	vb = ugol (bx-ax) (by-ay)
+	vc = ugol (cx-ax) (cy-ay)
 
 {-
   3. Определить функцию, которая принимает список точек и вычисляет список направлений поворотов
@@ -23,7 +43,8 @@ data Direction
 -}
 
 directions :: [Point] -> [Direction]
-directions = undefined
+directions (a:b:[]) = []
+directions (a:b:c:xs) = [direct a b c] ++ directions (b:c:xs)
 
 {-
   4. Пользуясь решениями предыдущих упражнений, реализовать алгоритм Грэхема нахождения выпуклой
