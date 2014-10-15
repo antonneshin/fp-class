@@ -44,17 +44,21 @@ c1 `beats` c2 = compare c1 c2
 game_round :: ([Card], [Card]) -> ([Card], [Card])
 game_round (xs, ys) = foldl(\ (a, b) _ -> my_round (a, b) ) (xs, ys) [1..n]
  where
-  n = length xs
+  n = min (length xs) (length ys)
 
+my_value :: Card -> Value
+my_value (Card a _) = a
 
-my_round :: Ord a => ([a], [a]) -> ([a], [a])
-my_round (xs, ys)
-  | (compare h1 h2) == LT = (drop 1 xs, (drop 1 ys) ++ [h2] ++ [h1] )
-  | (compare h1 h2) == GT = ((drop 1 xs) ++ [h1] ++ [h2], drop 1 ys  )
+my_round :: ([Card], [Card]) -> ([Card], [Card])
+my_round (xs, ys)  
+  | (compare h11 h22) == LT = (drop 1 xs, (drop 1 ys) ++ [h2] ++ [h1] )
+  | (compare h11 h22) == GT = ((drop 1 xs) ++ [h1] ++ [h2], drop 1 ys  )
   | otherwise = (drop 1 xs, drop 1 ys)
   where 
-    h1 = head xs	
+    h1 = head xs
     h2 = head ys
+    h11 = my_value h1	
+    h22 = my_value h2
 
 {-
   5. Определить функцию, которая по паре списков возвращает количество раундов, необходимых
@@ -82,7 +86,18 @@ game_cnt (xs, ys) = [0] ++ game_cnt (game_round (xs, ys))
   изначально должно быть не менее 10 карт).
 -}
 --Spades | Clubs | Diamonds | Hearts
-game_test1 = game ([Card Ten Diamonds,Card Seven Clubs, Card Queen Spades, Card Five Hearts, Card King Spades, Card Four Clubs, Card Two Diamonds, Card Three Hearts, Card Jack Spades],[Card Eight Clubs,Card Ace Clubs, Card Nine Diamonds, Card Queen Hearts, Card King Clubs, Card Two Clubs, Card Three Spades, Card Jack Hearts, Card Six Spades, Card Jack Clubs])
+game_test1 = game ([Card Ten Clubs, Card Six Spades], [Card Seven Diamonds, Card Ace Clubs])
+
+game_test2 = game ([Card Ten Clubs, Card Six Spades, Card Queen Hearts], [Card Seven Diamonds, Card Ace Clubs, Card Jack Hearts])
+
+game_test3 = game ([Card Ten Clubs, Card Six Spades, Card Ace Clubs, Card Queen Hearts], [Card Seven Diamonds, Card King Clubs, Card Jack Hearts, Card Two Clubs])
+
+game_test4 = game ([Card Ten Clubs, Card Six Spades, Card Ace Clubs, Card Queen Hearts, Card Five Diamonds], [Card Seven Diamonds, Card King Clubs, Card Jack Hearts, Card Two Clubs, Card Three Diamonds])
+
+--зацикливается
+game_test5 = game ([Card Ten Diamonds,Card Seven Clubs, Card Queen Spades, Card Five Hearts, Card King Spades, Card Four Clubs, Card Two Diamonds, Card Three Hearts, Card Jack Spades],[Card Eight Clubs,Card Ace Clubs, Card Nine Diamonds, Card Queen Hearts, Card King Clubs, Card Two Clubs, Card Three Spades, Card Jack Hearts, Card Six Spades, Card Jack Clubs])
+
+
 
 {-
   7 (необязательное упражнение). Реализуйте версию функции game, которая помимо результатов
