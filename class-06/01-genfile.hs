@@ -8,9 +8,12 @@
      ghci> :main 1000 "Привет, мир" hello.txt
 done-}
 import System.Environment
+import System.IO
+import Data.Char
+
 
 createFile :: Int -> String -> FilePath -> IO ()
-createFile n s fname = undefined
+createFile n s fname = writeFile fname (unwords $ take n $ repeat s)
 
 main = do
   [n_str, text, fname] <- getArgs
