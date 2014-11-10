@@ -1,3 +1,4 @@
+{-# LANGUAGE TypeSynonymInstances,FlexibleInstances #-}
 import System.Environment
 
 {-
@@ -5,7 +6,7 @@ import System.Environment
 -}
 
 totalLength :: [String] -> Int
-totalLength = undefined
+totalLength str = foldl ( \ sum a -> sum + (length a)) 0 str
 
 {-
   Написать функцию, которая по заданному символу и целому числу n строит список строк,
@@ -13,7 +14,8 @@ totalLength = undefined
 -}
 
 build1 :: Char -> Int -> Maybe [String]
-build1 = undefined
+build1 _ 0 = Nothing
+build1 el n = Just $ fst $ foldl (\ (ls, elem) a -> (ls ++ [take a $ repeat elem], elem)) ([], el) [1..n] 
 
 {-
   Написать функцию, аналогичную по возможностям функции build1, но возвращающую при этом
@@ -25,8 +27,12 @@ build1 = undefined
 -}
 
 build2 :: Char -> Int -> Either String [String]
-build2 = undefined
-
+build2 el n
+  | n==0 = Left "n=0" 
+  | n>100 = Left "n > 100 " 
+  | el=='x' = Left "can't create list with character 'x'..."
+  | otherwise = Right (fst $ foldl (\ (ls, elem) a -> (ls ++ [take a $ repeat elem], elem)) ([], el) [1..n])
+ 
 {-
   Параметрами командной строки являются имя файла, символ, целое число.
   1) Пользуясь функцией totalLength и возможностями IO, как функтора, подсчитать и
@@ -39,5 +45,30 @@ build2 = undefined
      Maybe и Either String как функторов).
 -}
 
+
+instance Functor (Either String) where
+  fmap f (Right x) = Right (f x)
+  fmap f (Left x) = Left x
+
+
+
 main = do
-  undefined
+  [name, ch, num] <- getArgs
+
+  first <- fmap totalLength getArgs
+  putStr "1) "
+  print first 
+   
+
+  putStr "2) "
+  second <- fmap (totalLength.lines) (readFile name)
+  print second
+
+  putStrLn "3) "
+  putStr "    build1) "
+  print $ fmap (totalLength) (build1 (head ch) (read num :: Int))
+
+  putStr "    build2) "
+  print $ fmap (totalLength) (build2 (head ch) (read num :: Int))
+
+
