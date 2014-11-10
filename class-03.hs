@@ -16,23 +16,8 @@
   f) удалить из него все положительные чётные числа.
 -}
 
-f11a :: (Integral a, Eq a) => [a] -> [a]
-f11a = map (*2)
-
-f11b :: Integral a => [a] -> [a]
-f11b = map (\x -> if x `mod` 2 == 0 then 2*x else x)
-
-f11c :: Integral a => [a] -> [a]
-f11c = map (\x -> if x `mod` 2 /= 0 then 0 else x)  
-	 
-f11d :: Integral a => a -> [a] -> [a]
-f11d k = filter (<= k) 
-
-f11e :: Integral a => [a] -> [a]
-f11e = filter (< 0) 
-
-f11f :: (Integral a, Eq a) => [a] -> [a]
-f11f = filter (\x -> x `mod` 2 /= 0 || x<=0) 
+f11a :: Integral a => [a] -> [a]
+f11a = map undefined
 
 {-
  1.2 Дан список декартовых координат точек на плоскости (пар вещественных чисел).
@@ -40,18 +25,6 @@ f11f = filter (\x -> x `mod` 2 /= 0 || x<=0)
   a) отфильтровать список так, чтобы в нём остались точки из заданной координатной четверти;
   b) преобразовать декартовы координаты в полярные.
 -}
-
-in_quater:: Int -> [(Double, Double)] -> [(Double, Double)]
-in_quater k
-	| k==1 = filter (\(a, b) -> (a>=0) && (b>=0))
-	| k==2 = filter (\(a, b) -> (a<=0) && (b>=0))
-	| k==3 = filter (\(a, b) -> (a<=0) && (b<=0))
-	| k==4 = filter (\(a, b) -> (a>=0) && (b<=0))
-
-dtop :: [(Double, Double)] -> [(Double, Double)]
-dtop = map (\(x, y) -> ( sqrt(x^2 + y^2), atan(y/x) ) )
-
-prov = map (\x -> if x `mod` 2 == 0 then 2*x else x) 
 
 {-
  1.3 Дан список слов.
