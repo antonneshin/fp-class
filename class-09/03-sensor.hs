@@ -15,12 +15,12 @@ type SensorData = [SensorValue]
    значений, полученных от датчика. -}
 
 getData :: String -> SensorData
-getData = undefined . lines
+getData = (foldl(\ ls a -> if (head $ words a)/="-" then ls++[Just (read a::Int)] else ls++[Nothing]) []) . lines
 
 {- Напишите функцию, группирующую данные по суткам. -}
 
 dataByDay :: SensorData -> [SensorData]
-dataByDay = undefined
+dataByDay = fst.foldl (\ (mls, ls) a -> if (length ls)/=5 then (mls, ls++[a]) else (mls++[ls], []) )  ([],[])
 
 {-
   Посчитайте минимальное значение среди показаний датчика,
@@ -36,7 +36,10 @@ dataByDay = undefined
 -}
 
 minData1 :: Bool -> [SensorData] -> Int
-minData1 needFirst = minimum . undefined
+minData1 needFirst ls 
+  | needFirst==True = minimum .  getFirst . mconcat . map First ls
+  | otherwise = minimum .  getLast . mconcat . map Last ls 
+
 
 {-
   Посчитайте минимальное значение среди данных,
